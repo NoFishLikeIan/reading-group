@@ -1,0 +1,103 @@
+\documentclass[12pt, aspectratio=169]{beamer}
+\usetheme{moloch}
+
+\molochset{progressbar=head}
+
+\usepackage{appendixnumberbeamer}
+\setbeamercovered{transparent=15}
+\setbeamertemplate{section in toc}[sections numbered]
+\setbeamertemplate{page number in head/foot}[appendixframenumber]
+
+\usepackage{amsmath, mathtools, amssymb}
+\usepackage{physics}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{backgrounds}
+\usepgfplotslibrary{patchplots}
+\usepgfplotslibrary{fillbetween}
+
+\usepackage[
+    style=apa
+]{biblatex}
+\addbibresource{refs.bib}
+
+\title{Irreversible Adaptation and\\Knightian Climate Uncertainty}
+\subtitle{\textcite{yan_irreversible_2025}}
+\author{Andrea Titton}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Model}
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \begin{equation*}
+                \pi(t) = a_{i(t)} N(t)^{b_{i(t)}}
+            \end{equation*} \uncover<2->{where $i(t) = 1$ if the firm has adopted an adaptation technology at time $t$.}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \begin{itemize}
+                \item Profits $\pi(t)$,
+                \item natural resource $N(t)$,
+                \item profitability $a_i$,
+                \item dependence $b_i$.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    Technology makes the firm \begin{align*}
+        \text{more profitable } a_1 &\geq a_0 \\
+        \text{less susceptible } b_1 &\leq b_0.
+    \end{align*}
+    
+    \begin{figure}
+        \input{figures/profit.tikz}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    The firm decides the time $\tau$ at which it should adopt this technology.
+\end{frame}
+
+\begin{frame}
+    Firms believe the future natural resource $N(t)$ follows \begin{equation*}
+        \frac{\dd{N}(t)}{N(t)} = \alpha \dd{t} + \sigma \dd{B(t)},
+    \end{equation*} but they do not know $\alpha$ and $\sigma^2$. 
+    
+    \uncover<2>{
+        A belief is simply \begin{equation*}
+            (\alpha, \sigma^2) = \theta \in \Theta \coloneqq [\underline{\alpha}, \overline{\alpha}] \times [\underline{\sigma}, \overline{\sigma}].
+        \end{equation*}
+    } 
+\end{frame}
+
+
+\begin{frame}
+    Some technicalities: \begin{enumerate}\setlength{\itemsep}{1em}
+        \item Each belief $\theta$ induces a probability measure $P^\theta$ on the domain of $N$.
+        \pause \item Call $P^{\Theta} \coloneqq \{P^{\theta} : \theta \in \Theta\}$.
+        \pause \item Index beliefs by $q \in P^{\Theta}$ such that \begin{equation}
+            \frac{\dd{N}(t)}{N(t)} = \alpha_q \dd{t} + \sigma_q \dd{B(t)},
+        \end{equation}
+    \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+    Combining \textbf{beliefs} and \textbf{technology}, we get profits \begin{equation}
+        \frac{\dd{\pi(t)}}{\pi(t)} = \left( b_i \alpha_q + \frac{1}{2} b_i (b_i - 1) \sigma_q^2 \right) \dd{t} + b_i \sigma_q \dd{B}(t).
+    \end{equation}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+\frametitle{References}
+\printbibliography
+\end{frame}
+
+\end{document}
