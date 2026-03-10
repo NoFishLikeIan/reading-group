@@ -8,6 +8,8 @@
 \setbeamertemplate{section in toc}[sections numbered]
 \setbeamertemplate{page number in head/foot}[appendixframenumber]
 
+\usepackage{graphicx}
+
 \usepackage{amsmath, mathtools, amssymb}
 \usepackage{physics}
 \usepackage{tikz}
@@ -17,13 +19,17 @@
 \usepgfplotslibrary{patchplots}
 \usepgfplotslibrary{fillbetween}
 
-\usepackage[
-    style=apa
-]{biblatex}
+
+\usepackage[dvipsnames]{xcolor}
+\newcommand{\con}[1]{{\color{BlueGreen} #1}}
+\newcommand{\bel}[1]{{\color{BrickRed} #1}}
+\newcommand{\tech}[1]{{\color{PineGreen} #1}}
+
+\usepackage[style=apa]{biblatex}
 \addbibresource{refs.bib}
 
 \title{Irreversible Adaptation and\\Knightian Climate Uncertainty}
-\subtitle{\textcite{yan_irreversible_2025}}
+\subtitle{\textcite[Environmental and Resource Economics]{yan2025}}
 \author{Andrea Titton}
 \date{\today}
 
@@ -31,20 +37,35 @@
 
 \maketitle
 
+\section{Outline}
+
+\begin{frame}
+    \begin{itemize} \setlength{\itemsep}{0.5em}
+        \item \textcite{yan2025} study a firm whose profits $\pi(t)$ come (in part) from a natural resource $N(t)$ (water availability)
+        \pause \item The future of the resource $N(t)$ is uncertain due to climate change (less mountain snow) and firm need to form a belief $\bel{q}$ over it.
+        \pause \item The firm has a costly technology $\tech{i}$ it can adopt, to reduce its dependence on the resource (center crop irrigation). 
+        \pause \item Empirical application (agricolture in California) which does not rely on survey data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \tableofcontents
+\end{frame}
+
 \section{Model}
 \begin{frame}
     \begin{columns}
         \begin{column}{0.6\textwidth}
             \begin{equation*}
-                \pi(t) = a_{i(t)} N(t)^{b_{i(t)}}
-            \end{equation*} \uncover<2->{where $i(t) = 1$ if the firm has adopted an adaptation technology at time $t$.}
+                \pi_{\tech{i}}(t) = a_{\tech{i}} N(t)^{b_{\tech{i}}}
+            \end{equation*} \uncover<2->{where $\tech{i} = 1$ if the firm has adopted an adaptation technology at time $t$.}
         \end{column}
         \begin{column}{0.4\textwidth}
             \begin{itemize}
-                \item Profits $\pi(t)$,
+                \item Profits $\pi_{\tech{i}}(t)$,
                 \item natural resource $N(t)$,
-                \item profitability $a_i$,
-                \item dependence $b_i$.
+                \item profitability $a_{\tech{i}} > 0$,
+                \item dependence $b_{\tech{i}}$ < 1.
             \end{itemize}
         \end{column}
     \end{columns}
@@ -52,17 +73,18 @@
 
 \begin{frame}
     Technology makes the firm \begin{align*}
-        \text{more profitable } a_1 &\geq a_0 \\
-        \text{less susceptible } b_1 &\leq b_0.
+        \text{more profitable } a_{\tech{1}} &> a_{\tech{0}} \\
+        \text{less susceptible } b_{\tech{1}} &< b_{\tech{0}}.
     \end{align*}
     
-    \begin{figure}
+    \uncover<2>{\begin{figure}
         \input{figures/profit.tikz}
     \end{figure}
+    }
 \end{frame}
 
 \begin{frame}
-    The firm decides the time $\tau$ at which it should adopt this technology.
+    The firm decides the time $\con{\tau}$ at which it should adopt this technology at a cost $I$.
 \end{frame}
 
 \begin{frame}
@@ -82,18 +104,148 @@
     Some technicalities: \begin{enumerate}\setlength{\itemsep}{1em}
         \item Each belief $\theta$ induces a probability measure $P^\theta$ on the domain of $N$.
         \pause \item Call $P^{\Theta} \coloneqq \{P^{\theta} : \theta \in \Theta\}$.
-        \pause \item Index beliefs by $q \in P^{\Theta}$ such that \begin{equation}
-            \frac{\dd{N}(t)}{N(t)} = \alpha_q \dd{t} + \sigma_q \dd{B(t)},
-        \end{equation}
+        \pause \item Index beliefs by ${\bel{q}} \in P^{\Theta}$ such that \begin{equation*}
+            \frac{\dd{N}(t)}{N(t)} = \alpha_{\bel{q}} \dd{t} + \sigma_{\bel{q}} \dd{B(t)},
+        \end{equation*}
     \end{enumerate}
 \end{frame}
 
 
 \begin{frame}
-    Combining \textbf{beliefs} and \textbf{technology}, we get profits \begin{equation}
-        \frac{\dd{\pi(t)}}{\pi(t)} = \left( b_i \alpha_q + \frac{1}{2} b_i (b_i - 1) \sigma_q^2 \right) \dd{t} + b_i \sigma_q \dd{B}(t).
-    \end{equation}
+    Combining \textbf{beliefs} and \textbf{technology}, we get the expected profit dynamics \begin{equation*}
+        \frac{\dd{\pi_{\tech{i}, \bel{q}}(t)}}{\pi_{\tech{i}, \bel{q}}(t)} = \underbrace{\left( b_{\tech{i}} \alpha_{\bel{q}} + \frac{1}{2} b_{\tech{i}} (b_{\tech{i}} - 1) \sigma_{\bel{q}}^2 \right)}_{\mu_{\tech{i}, \bel{q}}} \dd{t} + \underbrace{b_{\tech{i}} \sigma_{\bel{q}}}_{\Sigma_{\tech{i}, \bel{q}}} \dd{B}(t).
+    \end{equation*}
 \end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \resizebox{!}{0.95\paperheight}{\input{figures/profitevolution.tikz}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    The \textbf{belief} of the firm comes into the expectations used for the objective \begin{equation*}
+        \mathbb{B}_{\varepsilon, \bel{q}}[\pi] \coloneqq \mathbb{E}\left[\pi \Big \vert \underbrace{\varepsilon \bel{q} + (1 - \varepsilon) \delta}_{\text{behavioural weight}}  \right]
+    \end{equation*} where $\delta$ is the empirical data and $\varepsilon$ is a behavioural distortion or ambiguity aversion.
+\end{frame}
+
+\begin{frame}
+    The firm problem is then \begin{equation*}
+        \begin{split}
+            V(\pi_{\tech{i}, q}(t)) = \sup_{\con{\tau}} \inf_{\bel{q} \in P^{\Theta}} \Bigg\{ &\mathbb{B}_{\varepsilon, \bel{q}} \Bigg[ \overbrace{\int^{\con{\tau}}_{t} \pi_{\tech{0}, \bel{q}}(s) e^{-\rho (s - t)} \dd{s}}^{\text{pre-investment}} \\
+            \uncover<2->{&\underbrace{\left( \int^{\infty}_{\con{\tau}} \pi_{\tech{1}, \bel{q}}(s) e^{-\rho (s - \con{\tau})} \dd{s} - I \right) e^{-\rho(\con{\tau} - t)}}_{\text{post-investment}} \Bigg]}
+        \end{split}
+    \end{equation*}
+\end{frame}
+
+
+
+\begin{frame}
+    The firm switches whenever $N(t)$ falls some $N^*$. No analytical expression but nice properties: \begin{enumerate}
+        \item Effect of risk $\frac{\partial N^*}{\partial \sigma}$ ambiguous \begin{itemize}
+            \item Increased opportunity costs $N^* \downarrow$ \\
+            \item Increases discounting $N^* \uparrow$
+        \end{itemize}
+        \item Effect of ambiguity $\frac{\partial N^*}{\partial \varepsilon}$ ambiguous \begin{itemize}
+            \item Increased opportunity costs $N^* \downarrow$ \\
+            \item Reduced benefits of technology through discounting $N^* \uparrow$
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\section{Empirical Application: farms in the Sacramento Valley}
+
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Data on output and water consumption\footnote{U.S. Department of Agriculture Farm and Ranch Irrigation Survey}. Over 70\% of irrigation supply comes from surface water $N(t)$ from Sierra Nevada.
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \includegraphics[width=0.7\linewidth]{figures/Sacramento_River_basin_map.png}
+                \caption{\footnotesize By Shannon1 - Own work, CC BY-SA 4.0}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{enumerate}
+                \item[$\tech{i = 0}$] Furrow or flood irrigation $(a_{\tech{0}}, b_{\tech{0}}) = (1031, 1.448 \%)$
+                \item[$\tech{i = 1}$] Center pivot or drip irrigation  $(a_\tech{1}, b_\tech{1}) = (1094, 0.08122 \%)$
+            \end{enumerate} and $I = \mathdollar 1,000/acre$.
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \includegraphics[width=0.7\linewidth]{figures/TypicalCenterPivotIrrigationLandscape.png}
+                \caption{\footnotesize Satellite image of Kansas' center-pivot irrigation}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    The space of possible \textbf{beliefs} $\Theta$: 64 climate projections implications of streamflows. Analyse three possible ambiguity levels $\varepsilon \in \{0, 0.9, 1.\}$.
+\end{frame}
+
+\begin{frame}
+    \begin{table}
+        \centering
+        \begin{tabular}{l c c c}
+            \hline
+            & \multicolumn{3}{c}{Ambiguity level} \\
+            Source of ambiguity & Low ($\varepsilon = 0$) & Moderate ($\varepsilon = 0.9$) & High ($\varepsilon = 1$) \\
+            \hline
+            Trend only & 9.92 & 9.24 & 9.01 \\
+            Volatility only & 9.92 & 7.74 & 7.47 \\
+            Both trend and volatility & 9.92 & 5.56 & 4.98 \\
+            \hline
+        \end{tabular}
+        
+        \vspace{1em}
+        \small Effect of increased ambiguity on the optimal expected time to adaptation $\tau$ in years.
+    \end{table}
+
+    $\implies$ despite ambiguous effect theoretically, the effect empirically is that ambiguity brings adaptation forward.
+\end{frame}
+
+\section{What can we learn for BELIEFS?}
+
+\begin{frame}
+    It seems to me like ``our'' problem is analogous \begin{table}
+        \centering
+        \footnotesize
+        \begin{tabular}{l|| c | c}
+            & Yan \& Sims & Beliefs \\ \hline\hline
+            $N(t)$ & Natural resource & Climate policy / carbon price \\ \hline
+            $\pi(t)$ & Profits of firms & Profits of firms \\ \hline
+            $\tech{i}$ & Reduces resource dependence & Reduces exposure to carbon price \\ \hline
+            $\bel{q}$ & Belief about future natural resource & Belief about future policy
+        \end{tabular}
+    \end{table}
+\end{frame}
+\begin{frame}
+    If so, some lessons \begin{enumerate} \setlength{\itemsep}{0.5em}
+        \item Should we think of ``beliefs'' in the same way? No need to estimate future beliefs $\bel{q}$, but only ambiguity aversion $\varepsilon$ and possible futures $\Theta$.
+        \pause \item Uncertainty around drift $\alpha_{\bel{q}}$ and noise $\sigma_{\bel{q}}$ have opposite effects!
+        \pause \item We cannot think of beliefs $\bel{q}$ independently of technology $a_{\tech{i}}, b_{\tech{i}}$ (old tale \textcite{gilboaTheoryDecisionUncertainty2009}) 
+        \pause \item Irreversibility $I$ matters (old tale \textcite{stokeyEconomicsInactionStochastic2008})
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    One key difference: \begin{itemize}
+        \item[] \textcite{yan2025}'s firms are facing nature (at least in the model). 
+        \item[] ``Our'' firms face a policymaker.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[standout]
+    Thank you!
+\end{frame}
+
 
 \begin{frame}[allowframebreaks]
 \frametitle{References}
